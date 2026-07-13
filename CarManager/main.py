@@ -181,6 +181,26 @@ def delete_owner(ownerId):
         conec.close()
 
 
+# FUNCTION RESPONSIBLE TO LIST THE DATA.
+def list_owners():
+    conec = init_db.get_connection()
+    cursor = conec.cursor()
+
+    print("---RESGISTERED OWNERS---")
+
+    try:
+        cursor.execute(
+            "SELECT owner_id, owner_name, owner_age, car_maker, car_model, car_color, car_price FROM CarManager")
+        rows = cursor.fetchall()
+        if not rows:
+            print("\nNo owners registered yet.")
+        for ownId, name, age, maker, model, color, price in rows:
+            print(
+                f"[{ownId}] {name}, age {age} - {maker} {model}, {color}, ${price:.2f}")
+    finally:
+        conec.close()
+
+
 # FUNCTION RESPONSIBLE TO RUN THE CODE, TO MAKE IT ALL WORK.
 def run_menu():
     print("---CAR MANAGER---")
@@ -190,7 +210,8 @@ def run_menu():
         print("\n[1] Add an owner")
         print("[2] Delete an owner (Per ID)")
         print("[3] Update.")
-        print("[4] Exit")
+        print("[4] Read. (List the data)")
+        print("[5] Exit")
 
         userChoice = input("\nChoose an option. ")
 
@@ -288,8 +309,11 @@ def run_menu():
                 # This will ensure if you type any number different from the cases, it will return a false input.
                 case _: return "\nInvalid Input."
 
-        # This will end the program.
-        elif userChoice == '4':
+        elif userChoice == "4":
+            list_owners()
+
+            # This will end the program.
+        elif userChoice == '5':
             print("Goodbye")
             break
         else:
